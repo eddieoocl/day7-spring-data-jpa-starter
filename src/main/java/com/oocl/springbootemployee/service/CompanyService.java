@@ -61,4 +61,8 @@ public class CompanyService {
         final var companyToUpdate = new Company(id, nameToUpdate, employeesToUpdate);
         return companyRepository.save(companyToUpdate);
     }
+
+    public void deleteById(int id) {
+        companyRepository.deleteById(id);
+    }
 }
