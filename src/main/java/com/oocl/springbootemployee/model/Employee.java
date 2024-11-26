@@ -2,6 +2,7 @@ package com.oocl.springbootemployee.model;
 
 import jakarta.persistence.*;
 
+@Entity
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
