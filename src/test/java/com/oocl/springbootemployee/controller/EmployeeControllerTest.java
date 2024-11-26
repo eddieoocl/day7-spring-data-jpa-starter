@@ -215,20 +215,22 @@ class EmployeeControllerTest {
     @Test
     void should_return_employees_when_get_by_pageable() throws Exception {
         //given
-        final List<Employee> givenEmployees = employeeInMemoryRepository.findAll();
+        final List<Employee> givenEmployees = employeeRepository.findAll();
+        Integer page = 2;
+        Integer pageSize = 2;
 
         //when
         //then
         client.perform(MockMvcRequestBuilders.get("/employees")
-                        .param("pageIndex", "2")
-                        .param("pageSize", "2"))
+                        .param("pageIndex", page.toString())
+                        .param("pageSize", pageSize.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(givenEmployees.get(2).getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(givenEmployees.get(3).getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(givenEmployees.get(2).getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].age").value(givenEmployees.get(2).getAge()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].gender").value(givenEmployees.get(2).getGender().name()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].salary").value(givenEmployees.get(2).getSalary()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(pageSize)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(givenEmployees.get((page - 1) * pageSize).getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(givenEmployees.get((page - 1) * pageSize + 1).getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(givenEmployees.get((page - 1) * pageSize).getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].age").value(givenEmployees.get((page - 1) * pageSize).getAge()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].gender").value(givenEmployees.get((page - 1) * pageSize).getGender().name()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].salary").value(givenEmployees.get((page - 1) * pageSize).getSalary()));
     }
 }
