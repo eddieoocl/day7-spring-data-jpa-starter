@@ -34,8 +34,8 @@ public class EmployeeService {
         return employeeInMemoryRepository.findAllByPage(page, pageSize);
     }
 
-    public Optional<Employee> findById(Integer employeeId) {
-        return employeeRepository.findById(employeeId);
+    public Employee findById(Integer employeeId) {
+        return employeeRepository.findById(employeeId).orElse(null);
     }
 
     public Employee create(Employee employee) {
