@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Company {
@@ -13,7 +14,7 @@ public class Company {
 
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "companyId")
     private List<Employee> employees = new ArrayList<>();
 
@@ -25,6 +26,11 @@ public class Company {
 
     public Company(Integer id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public Company(String name, List<Employee> employees) {
+        this.employees = employees;
         this.name = name;
     }
 
@@ -52,5 +58,18 @@ public class Company {
 
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Company company = (Company) o;
+        return Objects.equals(id, company.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
