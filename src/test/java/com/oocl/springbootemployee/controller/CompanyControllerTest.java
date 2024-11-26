@@ -26,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureJsonTesters
@@ -65,7 +66,6 @@ class CompanyControllerTest {
     void setUp() {
         initializeEmployees();
         setUpCompanyRepository();
-        setUpCompanyInMemoryRepository();
     }
 
     private void initializeEmployees() {
@@ -77,12 +77,6 @@ class CompanyControllerTest {
         david_williams = new Employee(null, "David Williams", 35, Gender.MALE, 5500.0);
         emily_brown = new Employee(null, "Emily Brown", 23, Gender.FEMALE, 4500.0);
         michael_jones = new Employee(null, "Michael Jones", 40, Gender.MALE, 7000.0);
-
-        john_smith = employeeRepository.save(john_smith);
-        jane_johnson = employeeRepository.save(jane_johnson);
-        david_williams = employeeRepository.save(david_williams);
-        emily_brown = employeeRepository.save(emily_brown);
-        michael_jones = employeeRepository.save(michael_jones);
     }
 
     private void setUpCompanyRepository() {
@@ -102,23 +96,6 @@ class CompanyControllerTest {
         companyRepository.save(nexus_industries);
     }
 
-
-    private void setUpCompanyInMemoryRepository() {
-        companyInMemoryRepository.findAll().clear();
-
-        john_smith = new Employee(1, "John Smith", 32, Gender.MALE, 5000.0);
-        jane_johnson = new Employee(2, "Jane Johnson", 28, Gender.FEMALE, 6000.0);
-        david_williams = new Employee(3, "David Williams", 35, Gender.MALE, 5500.0);
-        emily_brown = new Employee(4, "Emily Brown", 23, Gender.FEMALE, 4500.0);
-        michael_jones = new Employee(5, "Michael Jones", 40, Gender.MALE, 7000.0);
-
-        acme_corporation = companyInMemoryRepository.addCompany(new Company("Acme Corporation", List.of(john_smith, jane_johnson)));
-        techcom_solutions = companyInMemoryRepository.addCompany(new Company("TechCom Solutions", List.of(david_williams, emily_brown, michael_jones)));
-        global_innovators = companyInMemoryRepository.addCompany(new Company("Global Innovators"));
-        stellar_enterprises = companyInMemoryRepository.addCompany(new Company("Stellar Enterprises"));
-        nexus_industries = companyInMemoryRepository.addCompany(new Company("Nexus Industries"));
-    }
-
     @Test
     void should_return_all_companies() throws Exception {
         // Given
@@ -133,25 +110,25 @@ class CompanyControllerTest {
         final List<Company> fetchedCompanies = companyListJacksonTester.parseObject(result.getResponse().getContentAsString());
         assertThat(fetchedCompanies).hasSameSizeAs(givenCompanies);
         assertThat(fetchedCompanies)
-                .usingRecursiveComparison()
+                .usingRecursiveFieldByFieldElementComparator()
                 .isEqualTo(givenCompanies);
     }
-//
-//    @Test
-//    void should_return_paged_companies_when_get_by_page_params() throws Exception {
-//        // Given
-//        var pageIndex = 2;
-//        var pageSize = 2;
-//        final var the5thEmployeeCompanyInPage3 = companyRepository.findById(nexus_industries.getId());
-//
-//        // When
-//        // Then
-//        client.perform(MockMvcRequestBuilders.get(String.format("/companies?pageIndex=%s&pageSize=%s", pageIndex, pageSize)))
-//            .andExpect(MockMvcResultMatchers.status().isOk())
-//            .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)))
-//            .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(the5thEmployeeCompanyInPage3.get().getId()))
-//            .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value(the5thEmployeeCompanyInPage3.get().getName()));
-//    }
+
+    @Test
+    void should_return_paged_companies_when_get_by_page_params() throws Exception {
+        // Given
+        var pageIndex = 2;
+        var pageSize = 2;
+        var thirdCompany = companyRepository.findById(global_innovators.getId());
+
+        // When
+        // Then
+        client.perform(MockMvcRequestBuilders.get(String.format("/companies?pageIndex=%s&pageSize=%s", pageIndex, pageSize)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(thirdCompany.get().getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(thirdCompany.get().getName()));
+    }
 //
 //    @Test
 //    void should_return_employees_when_get_employees_under_the_company() throws Exception {

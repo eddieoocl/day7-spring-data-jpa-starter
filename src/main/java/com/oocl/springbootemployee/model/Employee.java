@@ -78,16 +78,11 @@ public class Employee {
         isActive = active;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return Objects.equals(id, employee.id);
+    public Integer getCompanyId() {
+        return companyId;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
     }
 }
