@@ -120,15 +120,15 @@ class CompanyControllerTest {
         // Given
         var pageIndex = 2;
         var pageSize = 2;
-        var thirdCompany = companyRepository.findById(global_innovators.getId());
+        var fifthCompany = companyRepository.findById(nexus_industries.getId());
 
         // When
         // Then
         client.perform(MockMvcRequestBuilders.get(String.format("/companies?pageIndex=%s&pageSize=%s", pageIndex, pageSize)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(thirdCompany.get().getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(thirdCompany.get().getName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(fifthCompany.get().getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(fifthCompany.get().getName()));
     }
 
     @Test
