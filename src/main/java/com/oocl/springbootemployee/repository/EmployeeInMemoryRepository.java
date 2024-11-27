@@ -1,13 +1,13 @@
 package com.oocl.springbootemployee.repository;
 
+import com.oocl.springbootemployee.model.Employee;
+import com.oocl.springbootemployee.model.Gender;
+import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import com.oocl.springbootemployee.model.Employee;
-import com.oocl.springbootemployee.model.Gender;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class EmployeeInMemoryRepository {
@@ -31,24 +31,24 @@ public class EmployeeInMemoryRepository {
 
     public Employee findById(Integer id) {
         return employees.stream()
-            .filter(employee -> Objects.equals(employee.getId(), id))
-            .findFirst()
-            .orElse(null);
+                .filter(employee -> Objects.equals(employee.getId(), id))
+                .findFirst()
+                .orElse(null);
     }
 
     public List<Employee> findAllByGender(Gender gender) {
         return employees.stream()
-            .filter(employee -> employee.getGender().equals(gender))
-            .collect(Collectors.toList());
+                .filter(employee -> employee.getGender().equals(gender))
+                .collect(Collectors.toList());
     }
 
     public Employee create(Employee employee) {
         final Employee newEmployee = new Employee(
-            this.findAll().size() + 1,
-            employee.getName(),
-            employee.getAge(),
-            employee.getGender(),
-            employee.getSalary());
+                this.findAll().size() + 1,
+                employee.getName(),
+                employee.getAge(),
+                employee.getGender(),
+                employee.getSalary());
 
         employees.add(newEmployee);
         return newEmployee;
@@ -56,10 +56,10 @@ public class EmployeeInMemoryRepository {
 
     public Employee update(Integer id, Employee employee) {
         return employees.stream()
-            .filter(storedEmployee -> storedEmployee.getId().equals(id))
-            .findFirst()
-            .map(storedEmployee -> updateEmployeeAttributes(storedEmployee, employee))
-            .orElse(null);
+                .filter(storedEmployee -> storedEmployee.getId().equals(id))
+                .findFirst()
+                .map(storedEmployee -> updateEmployeeAttributes(storedEmployee, employee))
+                .orElse(null);
     }
 
     private Employee updateEmployeeAttributes(Employee employeeStored, Employee newEmployee) {
@@ -84,8 +84,8 @@ public class EmployeeInMemoryRepository {
 
     public List<Employee> findAllByPage(Integer pageIndex, Integer pageSize) {
         return employees.stream()
-            .skip((long) (pageIndex - 1) * pageSize)
-            .limit(pageSize)
-            .toList();
+                .skip((long) (pageIndex - 1) * pageSize)
+                .limit(pageSize)
+                .toList();
     }
 }

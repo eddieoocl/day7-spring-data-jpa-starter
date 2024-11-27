@@ -1,15 +1,8 @@
 package com.oocl.springbootemployee.controller;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
-
 import com.oocl.springbootemployee.model.Employee;
 import com.oocl.springbootemployee.model.Gender;
 import com.oocl.springbootemployee.repository.EmployeeInMemoryRepository;
-
-import java.util.List;
-
 import com.oocl.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +15,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -54,7 +53,6 @@ class EmployeeControllerTest {
         employeeRepository.save(new Employee(null, "Emily Brown", 23, Gender.FEMALE, 4500.0));
         employeeRepository.save(new Employee(null, "Michael Jones", 40, Gender.MALE, 7000.0));
     }
-
 
     private void setUpEmployeeInMemoryRepository() {
         employeeInMemoryRepository.findAll().clear();
